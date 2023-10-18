@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 
 @Entity //엔티티로 지정
 @Getter //Getter 생성
-@NoArgsConstructor(access = AccessLevel.PROTECTED) // 기본생성자를 만들어 줌.
+@NoArgsConstructor(access = AccessLevel.PROTECTED) // 기본생성자를 만들어 줌. (protected 접근제어)
 public class Article {
 
     @Id //id 필드를 기본키로 지정
