@@ -26,5 +26,13 @@ public class BlogService {
         return blogRepository.findAll(); //jpa레포에서 지원하는 findAll메서드 호출
     }
 
+    //블로그 글 조회
+    public Article findById(long id){
+        //jpa에서 제공하는 findByid메서드를 사용해 ID를 받아서 엔티티를 조회
+        //id가 존재하지 않으면, IllegalArgumentException을 발생시킴.
+        return blogRepository.findById(id)
+                .orElseThrow(()-> new IllegalArgumentException("not found: "+ id));
+    }
+
 
 }
