@@ -17,6 +17,7 @@ public class AddArticleResponse {
     private final String content;
 
     //생성자를 사용해서 객체를 생성.
+    //article는 엔티티이기 때문에 가져올 때 레코드 하나 즉, article 객체로 꺼내오게 됨.
     public AddArticleResponse(Article article) {
         this.title = article.getTitle();
         this.content = article.getContent();
