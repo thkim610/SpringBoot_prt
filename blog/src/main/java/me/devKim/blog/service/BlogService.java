@@ -34,5 +34,11 @@ public class BlogService {
                 .orElseThrow(()-> new IllegalArgumentException("not found: "+ id));
     }
 
+    //블로그 글 삭제
+    public void delete(long id){
+        //jpa에서 제공하는 deleteById메서드를 사용해 ID를 받아서 엔티티를 삭제
+        blogRepository.deleteById(id);
+    }
+
 
 }
