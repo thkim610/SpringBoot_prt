@@ -4,8 +4,10 @@ import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import me.devKim.blog.domain.Article;
 import me.devKim.blog.dto.AddArticleRequest;
+import me.devKim.blog.dto.UpdateArticleRequest;
 import me.devKim.blog.repository.BlogRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -38,6 +40,23 @@ public class BlogService {
     public void delete(long id){
         //jpa에서 제공하는 deleteById메서드를 사용해 ID를 받아서 엔티티를 삭제
         blogRepository.deleteById(id);
+    }
+
+    //블로그 글 수정
+    /*
+    @Transactional : 매칭한 메서드를 하나의 트랜잭션으로 묶는 역할을 한다.
+     */
+    @Transactional
+    public Article update(long id, UpdateArticleRequest request){
+        //jpa에서 제공하는 findByid메서드를 사용해 ID를 받아서 엔티티를 조회
+        //id가 존재하지 않으면, IllegalArgumentException을 발생시킴.
+        Article article = blogRepository.findById(id)
+                .orElseThrow(()-> new IllegalArgumentException("Not found : "+id));
+
+        //브라우저로부터 받은 요청 정보로 블로그 글 수정 메서드 호출.
+        article.update(request.getTitle(), request.getContent());
+
+        return article;
     }
 
 
