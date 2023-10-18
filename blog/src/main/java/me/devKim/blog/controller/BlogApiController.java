@@ -42,6 +42,7 @@ public class BlogApiController {
 
     }
 
+    //블로그 글 조회
     @GetMapping("/api/articles/{id}")
     public ResponseEntity<AddArticleResponse> findArticle(@PathVariable long id){  // url에서 {id}에 해당하는 값이 들어옴.
         //@PathVariable: url에서 값을 가져오는 애너테이션.
@@ -49,5 +50,13 @@ public class BlogApiController {
 
         //HTTP 응답코드를 200(ok)로 설정하고, 응답의 본문에 해당 id의 글 정보를 담아 반환.
         return ResponseEntity.ok().body(new AddArticleResponse(article));
+    }
+
+    //블로그 글 삭제
+    @DeleteMapping("/api/articles/{id}")
+    public ResponseEntity<Void> deleteArticle(@PathVariable long id){
+        blogService.delete(id);
+
+        return ResponseEntity.ok().build();
     }
 }
