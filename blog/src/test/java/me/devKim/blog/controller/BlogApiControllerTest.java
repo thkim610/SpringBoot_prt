@@ -108,4 +108,30 @@ class BlogApiControllerTest {
 
     }
 
+    //블로그 글 조회 테스트
+    @DisplayName("findArticle: 블로그 글 조회에 성공")
+    @Test
+    public void findArticle() throws Exception{
+        //given :블로그 글을 저장한다.
+        final String url = "/api/articles/{id}";
+        final String title = "title";
+        final String content = "content";
+
+        //save 메서드로 글 저장 (빌트 패턴으로 저장)
+        Article savedArticle = blogRepository.save(Article.builder()
+                .title(title)
+                .content(content)
+                .build());
+
+        //when :저장한 블로그 글의 id 값으로 API를 호출한다.
+        final ResultActions result = mockMvc.perform(get(url, savedArticle.getId()));
+
+
+        //then :응답코드가 200 ok 인지 확인. 반환 받은 값들이 저장된 값들과 맞는지 비교.
+        result.andExpect(status().isOk()) //응답코드가 200 ok인지 확인.
+                .andExpect(jsonPath("$.content").value(content))//content가 맞는지 확인.
+                .andExpect(jsonPath("$.title").value(title));//title이 맞는지 확인.
+
+    }
+
 }
