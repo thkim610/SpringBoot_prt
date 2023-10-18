@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import me.devKim.blog.domain.Article;
 import me.devKim.blog.dto.AddArticleRequest;
 import me.devKim.blog.dto.AddArticleResponse;
+import me.devKim.blog.dto.UpdateArticleRequest;
 import me.devKim.blog.service.BlogService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -58,5 +59,15 @@ public class BlogApiController {
         blogService.delete(id);
 
         return ResponseEntity.ok().build();
+    }
+
+    //블로그 글 수정
+    @PutMapping("/api/articles/{id}")
+    public ResponseEntity<Article> updateArticle(@PathVariable long id, @RequestBody UpdateArticleRequest request){
+        Article updatedArticle = blogService.update(id, request);
+
+        // 요청한 자원이 성공적으로 수정되었으면 수정된 블로그 글 정보를 응답 객체에 담아 전송함. (응답코드:200)
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(updatedArticle);
     }
 }
