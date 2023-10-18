@@ -28,5 +28,11 @@ public class Article {
         this.content = content;
     }
 
+    //블로그 글 수정 기능
+    public void update(String title, String content){
+        this.title = title;
+        this.content = content;
+    }
+
 
 }
