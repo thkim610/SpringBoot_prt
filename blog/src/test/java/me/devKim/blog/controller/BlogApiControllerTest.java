@@ -19,7 +19,9 @@ import org.springframework.web.context.WebApplicationContext;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
@@ -48,6 +50,7 @@ class BlogApiControllerTest {
         blogRepository.deleteAll();
     }
 
+    //글 작성 테스트
     @DisplayName("addArticle: 블로그 글 추가에 성공")
     @Test
     public void addArticle() throws Exception{
@@ -75,6 +78,33 @@ class BlogApiControllerTest {
         assertThat(articles.get(0).getTitle()).isEqualTo(title); //title이 맞는지 확인.
         assertThat(articles.get(0).getContent()).isEqualTo(content); //content가 맞는지 확인.
 
+
+    }
+
+    //글 목록 조회 테스트
+    @DisplayName("findAllArticles: 블로그 글 목록 조회에 성공")
+    @Test
+    public void findAllArticles() throws Exception{
+        //given :블로그 글을 저장한다.
+        final String url = "/api/articles";
+        final String title = "title";
+        final String content = "content";
+
+        //save 메서드로 글 저장 (빌트 패턴으로 저장)
+        blogRepository.save(Article.builder()
+                .title(title)
+                .content(content)
+                .build());
+
+        //when :블로그 글 목록 조회 API를 호출한다.
+        //설정한 내용을 바탕으로 요청 전송
+        final ResultActions result = mockMvc.perform(get(url)
+                .contentType(MediaType.APPLICATION_JSON_VALUE));
+
+        //then :응답코드가 200 ok 인지 확인. 반환 받은 값 중에 0번쨰 요소들이 저장된 값들과 맞는지 비교.
+        result.andExpect(status().isOk()) //응답코드가 200 ok인지 확인.
+                .andExpect(jsonPath("$[0].content").value(content))//content가 맞는지 확인.
+                .andExpect(jsonPath("$[0].title").value(title));//title이 맞는지 확인.
 
     }
 
