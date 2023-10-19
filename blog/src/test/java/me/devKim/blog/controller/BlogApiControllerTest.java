@@ -3,6 +3,7 @@ package me.devKim.blog.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import me.devKim.blog.domain.Article;
 import me.devKim.blog.dto.AddArticleRequest;
+import me.devKim.blog.dto.UpdateArticleRequest;
 import me.devKim.blog.repository.BlogRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -158,10 +159,39 @@ class BlogApiControllerTest {
         List<Article> articles = blogRepository.findAll();
 
         assertThat(articles).isEmpty(); //배열의 크기가 0인지 체크.
-
-
-
-
     }
 
+    //블로그 글 수정 테스트
+    @DisplayName("updateArticle: 블로그 글 수정에 성공")
+    @Test
+    public void updateArticle() throws Exception {
+        //given : 블로그 글을 저장하고, 블로그 글 수정에 필요한 요청 객체를 만든다.
+        final String url = "/api/articles/{id}";
+        final String title = "title";
+        final String content = "content";
+
+        //save 메서드로 글 저장 (빌트 패턴으로 저장)
+        Article savedArticle = blogRepository.save(Article.builder()
+                .title(title)
+                .content(content)
+                .build());
+        //수정할 입력 값
+        final String newTitle = "new title";
+        final String newContent = "new content";
+
+        //수정 요청
+        UpdateArticleRequest request = new UpdateArticleRequest(newTitle, newContent);
+
+        //when : UpdateAPI로 수정 요청을 보낸다. 요청 타입 : JSON, given절에서 미리 만들어 둔 객체를 요청 본문으로 보낸다.
+        ResultActions result = mockMvc.perform(put(url, savedArticle.getId())
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(objectMapper.writeValueAsString(request)));
+        //then : 응답코드가 200 ok인지 확인. 블로그 글 id로 조회한 후에 값이 수정되었는지 확인.
+        result.andExpect(status().isOk()); //응답코드가 200 ok인지 확인.
+
+        Article article = blogRepository.findById(savedArticle.getId()).get();
+
+        assertThat(article.getTitle()).isEqualTo(newTitle);
+        assertThat(article.getContent()).isEqualTo(newContent);
+    }
 }
