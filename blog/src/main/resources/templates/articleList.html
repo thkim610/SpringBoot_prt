@@ -21,7 +21,7 @@
       <div class="card-body">
           <h5 class="card-title" th:text="${article.title}"></h5>
           <p class="card-content" th:text="${article.content}"></p>
-          <a href="#" class="btn btn-primary">보러 가기</a>
+          <a th:href="@{/articles/{id}(id=${article.id})}" class="btn btn-primary">보러 가기</a>
       </div>
   </div>
   <br>
