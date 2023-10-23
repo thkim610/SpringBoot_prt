@@ -23,9 +23,9 @@ if(modifyButton){
     // 클릭 이벤트가 감지되면 수정 API 요청
     modifyButton.addEventListener('click', event=>{
         let params = new URLSearchParams(location.search);
-        let id = document.getElementById('article-id').value;
+        let id = params.get('id'); //파라미터에서 id 값을 id에 할당.
         //수정API요청 (fetch/PUT) => JSON 방식으로 통신
-        fetch(`/api/articles/{id}`,{
+        fetch(`/api/articles/${id}`,{
             method : 'PUT',
             headers : {
                 "Content-Type" : "application/json", //json 형식으로 데이터 전송
