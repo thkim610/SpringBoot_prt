@@ -2,6 +2,7 @@ package me.devKim.blog.controller;
 
 import lombok.RequiredArgsConstructor;
 import me.devKim.blog.domain.Article;
+import me.devKim.blog.dto.AddArticleResponse;
 import me.devKim.blog.dto.ArticleListViewResponse;
 import me.devKim.blog.dto.ArticleViewResponse;
 import me.devKim.blog.service.BlogService;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -37,5 +39,21 @@ public class BlogViewController {
         model.addAttribute("article", new ArticleViewResponse(article));
 
         return "article";
+    }
+
+    //블로그 글 생성 또는 수정하는 기능
+    @GetMapping("/new-article")
+    //id키를 가진 쿼리 파라미터의 값을 id 변수에 매핑(id는 없을 수도 있음.)
+    public String newArticle(@RequestParam(required = false) Long id, Model model){
+        //id가 없다면 => 생성
+        //id가 있다면 => 수정
+        if(id == null){
+            model.addAttribute("article", new ArticleViewResponse());
+        }else{
+            Article article = blogService.findById(id);
+            model.addAttribute("article", article);
+        }
+        return "newArticle";
+
     }
 }
